@@ -141,7 +141,7 @@ export default {
       currentPriceFrom: 0,
       currentPriceTo: 0,
       currentCategoryId: 0,
-      currentColor: null,
+      currentColor: false,
     };
   },
   props: ['priceFrom', 'priceTo', 'categoryId', 'availableColors'],
@@ -172,14 +172,24 @@ export default {
       this.$emit('update:priceFrom', this.currentPriceFrom);
       this.$emit('update:priceTo', this.currentPriceTo);
       this.$emit('update:categoryId', this.currentCategoryId);
-      this.$emit('update:currentColor', this.currentColor);
+      this.$emit('update:availableColors', this.currentColor);
     },
     reset() {
       this.$emit('update:priceFrom', 0);
       this.$emit('update:priceTo', 0);
       this.$emit('update:categoryId', 0);
-      this.$emit('update:currentColor', null);
+      this.$emit('update:availableColors', false);
     },
+    // setRadioChoice() {
+    //   let checked;
+    //   if (this.currentColor) {
+    //     checked = true;
+    //   } else {
+    //     checked = false;
+    //   }
+    //
+    //   return checked;
+    // },
   },
 };
 </script>
