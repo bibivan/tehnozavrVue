@@ -40,7 +40,7 @@ export default {
       filterPriceFrom: 0,
       filterPriceTo: 0,
       filterCategoryId: 0,
-      filterColor: null,
+      filterColor: '',
       page: 1,
       productsPerPage: 3,
     };

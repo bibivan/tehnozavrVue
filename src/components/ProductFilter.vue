@@ -141,7 +141,7 @@ export default {
       currentPriceFrom: 0,
       currentPriceTo: 0,
       currentCategoryId: 0,
-      currentColor: false,
+      currentColor: '',
     };
   },
   props: ['priceFrom', 'priceTo', 'categoryId', 'availableColors'],
@@ -163,7 +163,7 @@ export default {
     categoryId(value) {
       this.currentCategoryId = value;
     },
-    currentColor(value) {
+    availableColors(value) {
       this.currentColor = value;
     },
   },
@@ -178,18 +178,8 @@ export default {
       this.$emit('update:priceFrom', 0);
       this.$emit('update:priceTo', 0);
       this.$emit('update:categoryId', 0);
-      this.$emit('update:availableColors', false);
+      this.$emit('update:availableColors', '');
     },
-    // setRadioChoice() {
-    //   let checked;
-    //   if (this.currentColor) {
-    //     checked = true;
-    //   } else {
-    //     checked = false;
-    //   }
-    //
-    //   return checked;
-    // },
   },
 };
 </script>
