@@ -14,7 +14,7 @@
         :price-from.sync="filterPriceFrom"
         :priceTo.sync="filterPriceTo"
         :category-id.sync="filterCategoryId"
-        :available-colors="filterColor"
+        :available-colors.sync="filterColor"
         />
 
       <section class="catalog">
