@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import ProductElement from './ProductElement.vue';
+import ProductElement from '@/components/ProductElement.vue';
 
 export default {
   components: { ProductElement },
