@@ -1,9 +1,8 @@
 <template>
   <div>
-    <a class="catalog__pic" href="#"
-       @click.prevent="goToPage('product', {id: product.id})">
+    <router-link class="catalog__pic" :to="{ name: 'product', params: {id: product.id}}">
       <img :src="product.image" :alt="product.title"/>
-    </a>
+    </router-link>
 
     <h3 class="catalog__title">
       <a href="#">
@@ -19,7 +18,8 @@
       <li class="colors__item" v-for="color in product.availableColors" :key="color">
         <label class="colors__label">
           <input class="colors__radio sr-only" type="radio" :value="color" v-model="currentColor"/>
-          <span class="colors__value" :style="{ backgroundColor: color, }"> </span>
+          <span class="colors__value"
+                :style="{ backgroundColor: color, boxShadow: shadow }"> </span>
         </label>
       </li>
     </ul>
@@ -34,6 +34,7 @@ export default {
   data() {
     return {
       currentColor: this.product.availableColors[0],
+      shadow: '0 0 3px 1px #666',
     };
   },
   props: ['product'],

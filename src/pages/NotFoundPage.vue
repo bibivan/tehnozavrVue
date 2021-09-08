@@ -1,5 +1,5 @@
 <template>
-<h1>Страница не найдена</h1>
+<h1 :style="{ padding: '100px' }">Ошибка 404: Страница не найдена</h1>
 </template>
 
 <script>
