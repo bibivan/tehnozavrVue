@@ -33,11 +33,11 @@ export default {
         this.currentQuantity = 0;
       }
 
-      this.change();
+      this.changeQuanitty();
     },
   },
   methods: {
-    change() {
+    changeQuanitty() {
       this.$emit('update:quantity', this.currentQuantity);
     },
   },
