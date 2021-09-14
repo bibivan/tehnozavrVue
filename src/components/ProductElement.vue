@@ -14,12 +14,13 @@
       {{ product.price | numberFormat }}
     </span>
 
-    <ul class="colors colors--black" v-if="product.availableColors.length !== 0">
-      <li class="colors__item" v-for="color in product.availableColors" :key="color">
+    <ul class="colors colors--black">
+      <li class="colors__item" v-for="colorItem in product.colors" :key="colorItem.code">
         <label class="colors__label">
-          <input class="colors__radio sr-only" type="radio" :value="color" v-model="currentColor"/>
+          <input class="colors__radio sr-only" type="radio" :value="colorItem.code"
+                 v-model="currentColor"/>
           <span class="colors__value"
-                :style="{ backgroundColor: color, boxShadow: shadow }"> </span>
+                :style="{ backgroundColor: colorItem.code, boxShadow: shadow }"> </span>
         </label>
       </li>
     </ul>
@@ -33,7 +34,7 @@ import numberFormat from '@/helpers/numberFormat';
 export default {
   data() {
     return {
-      currentColor: this.product.availableColors[0],
+      currentColor: '',
       shadow: '0 0 3px 1px #666',
     };
   },

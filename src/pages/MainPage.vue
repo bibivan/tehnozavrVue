@@ -14,10 +14,15 @@
         :price-from.sync="filterPriceFrom"
         :priceTo.sync="filterPriceTo"
         :category-id.sync="filterCategoryId"
-        :available-colors.sync="filterColor"
+        :available-colors.sync="filterColorCode"
+        :current-color-id.sync="filterColorId"
       />
 
       <section class="catalog">
+        <div v-if="productsLoading">Загрузка товаров...</div>
+        <div v-if="productsLoadingFailed">Произошла ошибка при загрузке товаров...
+          <button @click.prevent="loadProducts">Попробовать еще раз</button>
+        </div>
         <ProductList :productItems="products"/>
         <BasePagination v-model="page" :count="countProducts" :per-page="productsPerPage"/>
       </section>
@@ -28,10 +33,10 @@
 
 <script>
 import axios from 'axios';
-import products from '@/data/products';
 import ProductList from '@/components/ProductList.vue';
 import BasePagination from '@/components/BasePagination.vue';
 import ProductFilter from '@/components/ProductFilter.vue';
+import API_BASE_URL from '@/config';
 
 export default {
   components: {
@@ -44,52 +49,71 @@ export default {
       filterPriceFrom: 0,
       filterPriceTo: 0,
       filterCategoryId: 0,
-      filterColor: '',
+      filterColorCode: '',
+      filterColorId: 0,
+      productsLoading: true,
+      productsLoadingFailed: false,
       page: 1,
       productsPerPage: 3,
       productsData: null,
     };
   },
   computed: {
-    filtredProducts() {
-      let filtredProducts = products;
-
-      if (this.filterPriceFrom > 0) {
-        filtredProducts = filtredProducts.filter((product) => product.price > this.filterPriceFrom);
-      }
-
-      if (this.filterPriceTo > 0) {
-        filtredProducts = filtredProducts.filter((product) => product.price < this.filterPriceTo);
-      }
-
-      if (this.filterCategoryId) {
-        filtredProducts = filtredProducts.filter(
-          (product) => product.categoryId === this.filterCategoryId,
-        );
-      }
-
-      if (this.filterColor) {
-        filtredProducts = filtredProducts.filter(
-          (product) => product.availableColors.includes(this.filterColor),
-        );
-      }
-
-      return filtredProducts;
-    },
     products() {
-      return this.productsData ? this.productsData.items : [];
+      return this.productsData ? this.productsData.items.map((product) => {
+        const modifiedProductItem = {
+          ...product,
+          image: product.image.file.url,
+        };
+
+        return modifiedProductItem;
+      }) : [];
     },
     countProducts() {
-      return this.filtredProducts.length;
+      return this.productsData ? this.productsData.pagination.total : 0;
     },
   },
   methods: {
     loadProducts() {
-      axios.get('https://vue-study.skillbox.cc/api/products').then((response) => {
-        this.productsData = response.data;
-
-        return this.productsData;
-      });
+      this.productsLoading = true;
+      this.productsLoadingFailed = false;
+      clearTimeout(this.loadProductsTimer);
+      this.loadProductsTimer = setTimeout(() => {
+        axios.get(`${API_BASE_URL}/api/products`, {
+          params: {
+            page: this.page,
+            limit: this.productsPerPage,
+            colorId: this.filterColorId,
+            categoryId: this.filterCategoryId,
+            minPrice: this.filterPriceFrom,
+            maxPrice: this.filterPriceTo,
+          },
+        }).then((response) => {
+          this.productsData = response.data;
+          return this.productsData;
+        }).catch(() => {
+          this.productsLoadingFailed = true;
+        }).then(() => {
+          this.productsLoading = false;
+        });
+      }, 0);
+    },
+  },
+  watch: {
+    page() {
+      this.loadProducts();
+    },
+    filterPriceFrom() {
+      this.loadProducts();
+    },
+    filterPriceTo() {
+      this.loadProducts();
+    },
+    filterCategoryId() {
+      this.loadProducts();
+    },
+    filterColorCode() {
+      this.loadProducts();
     },
   },
   created() {

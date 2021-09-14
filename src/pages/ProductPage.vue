@@ -1,5 +1,9 @@
 <template>
-  <main class="content container">
+  <main class="content container" v-if="productLoading">Загрузка товара...</main>
+  <main class="content container" v-else-if="!productData || productLoadingFailed">
+    Не удалось загрузить товар
+  </main>
+  <main class="content container" v-else>
     <div class="content__top">
       <ul class="breadcrumbs">
         <li class="breadcrumbs__item">
@@ -23,7 +27,7 @@
     <section class="item">
       <div class="item__pics pics">
         <div class="pics__wrapper">
-          <img width="570" height="570" :src="product.image"
+          <img width="570" height="570" :src="product.image.file.url"
                srcset="img/phone-square@2x.jpg 2x" :alt="product.title">
         </div>
       </div>
@@ -39,7 +43,7 @@
             </b>
 
             <fieldset class="form__block">
-              <legend class="form__legend" v-show="product.availableColors.length !== 0">Цвет:
+              <legend class="form__legend">Цвет:
               </legend>
               <ul class="colors">
                 <li class="colors__item" v-for="color in product.availableColors" :key="color">
@@ -86,7 +90,7 @@
             </fieldset>
 
             <div class="item__row">
-              <set-quantity :quantity.sync="productAmount" />
+              <SetQuantity :quantity.sync="productAmount" />
               <button class="button button--primery" type="submit">
                 В корзину
               </button>
@@ -163,8 +167,8 @@
 </template>
 
 <script>
-import products from '@/data/products';
-import categories from '@/data/categories';
+import axios from 'axios';
+import API_BASE_URL from '@/config';
 import goToPage from '@/helpers/goToPage';
 import numberFormat from '@/helpers/numberFormat';
 import SetQuantity from '@/components/SetQuantity.vue';
@@ -180,16 +184,17 @@ export default {
     return {
       currentColor: '',
       productAmount: 1,
+      productData: null,
+      productLoading: false,
+      productLoadingFailed: false,
     };
   },
   computed: {
     product() {
-      const productItem = products.find((product) => product.id === +this.$route.params.id);
-
-      return productItem;
+      return this.productData;
     },
     category() {
-      return categories.find((category) => category.id === this.product.categoryId);
+      return this.productData.category;
     },
   },
   methods: {
@@ -199,6 +204,28 @@ export default {
         'addProductToCart',
         { productId: this.product.id, amount: this.productAmount },
       );
+    },
+    loadProduct() {
+      this.productLoading = true;
+      this.productLoadingFailed = false;
+      axios.get(`${API_BASE_URL}/api/products/${+this.$route.params.id}`).then((response) => {
+        this.productData = response.data;
+      }).catch(() => {
+        this.productLoadingFailed = true;
+      }).then(() => {
+        this.productLoading = false;
+      });
+    },
+  },
+  created() {
+    this.loadProduct();
+  },
+  watch: {
+    '$route.params.id': {
+      handler() {
+        this.loadProduct();
+      },
+      immediate: true,
     },
   },
 };

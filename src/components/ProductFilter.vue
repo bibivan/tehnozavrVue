@@ -40,16 +40,17 @@
       <fieldset class="form__block">
         <legend class="form__legend">Цвет</legend>
         <ul class="colors">
-          <li class="colors__item" v-for="color in colors" :key="color">
+          <li class="colors__item" v-for="colorItem in colors" :key="colorItem.id">
             <label class="colors__label">
               <input
                 class="colors__radio sr-only"
                 type="radio"
                 name="color"
-                :value="color"
+                :value="colorItem.code"
                 v-model="currentColor"
+                @change="selectFilteredColor(colorItem.id)"
               />
-              <span class="colors__value" :style="{ backgroundColor: color }"> </span>
+              <span class="colors__value" :style="{ backgroundColor: colorItem.code }"> </span>
             </label>
           </li>
         </ul>
@@ -132,8 +133,8 @@
 </template>
 
 <script>
-import categories from '@/data/categories';
-import colors from '@/data/colors';
+import axios from 'axios';
+import API_BASE_URL from '@/config';
 
 export default {
   data() {
@@ -142,15 +143,19 @@ export default {
       currentPriceTo: 0,
       currentCategoryId: 0,
       currentColor: '',
+      currentColorId: 0,
+
+      categoriesData: null,
+      colorsData: null,
     };
   },
   props: ['priceFrom', 'priceTo', 'categoryId', 'availableColors'],
   computed: {
     categories() {
-      return categories;
+      return this.categoriesData ? this.categoriesData.items : [];
     },
     colors() {
-      return colors;
+      return this.colorsData ? this.colorsData.items : [];
     },
   },
   watch: {
@@ -168,11 +173,16 @@ export default {
     },
   },
   methods: {
+    selectFilteredColor(value) {
+      this.currentColorId = value;
+    },
     submit() {
       this.$emit('update:priceFrom', this.currentPriceFrom);
       this.$emit('update:priceTo', this.currentPriceTo);
       this.$emit('update:categoryId', this.currentCategoryId);
       this.$emit('update:availableColors', this.currentColor);
+      this.$emit('update:availableColors', this.currentColor);
+      this.$emit('update:currentColorId', this.currentColorId);
     },
     reset() {
       this.$emit('update:priceFrom', 0);
@@ -180,6 +190,20 @@ export default {
       this.$emit('update:categoryId', 0);
       this.$emit('update:availableColors', '');
     },
+    loadCategories() {
+      axios.get(`${API_BASE_URL}/api/productCategories`).then((response) => {
+        this.categoriesData = response.data;
+      });
+    },
+    loadColors() {
+      axios.get(`${API_BASE_URL}/api/colors`).then((response) => {
+        this.colorsData = response.data;
+      });
+    },
+  },
+  created() {
+    this.loadCategories();
+    this.loadColors();
   },
 };
 </script>

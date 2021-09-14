@@ -2,16 +2,16 @@
   <li class="cart__item product"
       :key="item.productId">
     <div class="product__pic">
-      <img :src="item.product.image" width="120" height="120" :alt="item.product.title">
+      <img :src="item.image" width="120" height="120" :alt="item.product.title">
     </div>
     <h3 class="product__title">
       {{ item.product.title }}
     </h3>
     <span class="product__code">
-                {{ item.product.id }}
-              </span>
+      {{ item.producId }}
+    </span>
 
-    <set-quantity :quantity.sync="amount" />
+    <set-quantity :quantity.sync="amount"/>
 
     <b class="product__price">
       {{ (item.product.price * item.amount) | numberFormat }} ₽
@@ -45,10 +45,14 @@ export default {
   computed: {
     amount: {
       get() {
+        console.log(this.item);
         return this.item.amount;
       },
       set(value) {
-        this.$store.commit('updateCartProductAmount', { productId: this.item.productId, amount: value });
+        this.$store.commit('updateCartProductAmount', {
+          productId: this.item.productId,
+          amount: value,
+        });
       },
     },
   },

@@ -26,13 +26,16 @@
       <span class="content__info" v-else>
         {{products.length}} товаров
       </span>
+      <span class="content__info"> товаров
+      </span>
+
     </div>
 
     <section class="cart">
       <form class="cart__form form" action="#" method="POST">
         <div class="cart__field">
           <ul class="cart__list">
-            <cart-item v-for="item in products" :key="item.productId" :item="item"/>
+            <CartItem v-for="item in products" :key="item.productId" :item="item"/>
           </ul>
         </div>
 
