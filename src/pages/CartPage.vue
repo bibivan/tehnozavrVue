@@ -32,7 +32,12 @@
     </div>
 
     <section class="cart">
-      <form class="cart__form form" action="#" method="POST">
+      <div v-if="productsLoading"> Загрузка товаров</div>
+      <div v-else-if="$store.state.cartLoadingFailed"> Произошла ошибка</div>
+      <div v-else-if="products.length === 0 && $store.state.cartLoadingFailed === false">
+        Корзина пуста
+      </div>
+      <form class="cart__form form" action="#" method="POST" v-else>
         <div class="cart__field">
           <ul class="cart__list">
             <CartItem v-for="item in products" :key="item.productId" :item="item"/>
@@ -57,7 +62,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import numberFormat from '@/helpers/numberFormat';
 import CartItem from '@/components/CartItem.vue';
 
@@ -67,13 +72,30 @@ export default {
   data() {
     return {
       cartProductsCount: 0,
+      productsLoading: false,
+      productsLoadingFailed: false,
     };
   },
   filters: {
     numberFormat,
   },
   computed: {
-    ...mapGetters({ products: 'cartDetailProducts', totalPrice: 'cartTotalPrice' }),
+    ...mapGetters({
+      products: 'cartDetailProducts',
+      totalPrice: 'cartTotalPrice',
+    }),
+  },
+  methods: {
+    ...mapActions(['loadCart']),
+    showLoading() {
+      this.productsLoading = true;
+      this.loadCart().then(() => {
+        this.productsLoading = false;
+      });
+    },
+  },
+  created() {
+    this.showLoading();
   },
 };
 </script>
