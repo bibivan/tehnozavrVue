@@ -26,8 +26,6 @@
       <span class="content__info" v-else>
         {{products.length}} товаров
       </span>
-      <span class="content__info"> товаров
-      </span>
 
     </div>
 
@@ -46,15 +44,16 @@
 
         <div class="cart__block">
           <p class="cart__desc">
-            Мы&nbsp;посчитаем стоимость доставки на&nbsp;следующем этапе
+            Мы посчитаем стоимость доставки на следующем этапе
           </p>
           <p class="cart__price">
             Итого: <span>{{ totalPrice | numberFormat }} ₽</span>
           </p>
 
-          <button class="cart__button button button--primery" type="submit">
+          <router-link tag="button" :to="{ name: 'order'}"
+                       class="cart__button button button--primery" type="submit">
             Оформить заказ
-          </button>
+          </router-link>
         </div>
       </form>
     </section>

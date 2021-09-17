@@ -8,10 +8,10 @@
       {{ item.product.title }}
     </h3>
     <span class="product__code">
-      {{ item.producId }}
+      {{ item.productId }}
     </span>
 
-    <set-quantity :quantity.sync="amount"/>
+    <setQuantity :quantity.sync="amount"/>
 
     <b class="product__price">
       {{ (item.product.price * item.amount) | numberFormat }} ₽

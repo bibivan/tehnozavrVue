@@ -46,11 +46,11 @@
               <legend class="form__legend">Цвет:
               </legend>
               <ul class="colors">
-                <li class="colors__item" v-for="color in product.availableColors" :key="color">
+                <li class="colors__item" v-for="color in colors" :key="color.code">
                   <label class="colors__label">
                     <input class="colors__radio sr-only" type="radio" name="color-item"
-                           :value="color">
-                    <span class="colors__value" :style="{ backgroundColor: color}">
+                           :value="color.code">
+                    <span class="colors__value" :style="{ backgroundColor: color.code}">
                     </span>
                   </label>
                 </li>
@@ -197,6 +197,9 @@ export default {
     };
   },
   computed: {
+    colors() {
+      return this.productData.colors;
+    },
     product() {
       return this.productData;
     },
