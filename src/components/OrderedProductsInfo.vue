@@ -9,9 +9,5 @@ export default {
   name: 'OrderedProductsInfo',
   components: { ProductsInfoList },
   props: ['orderInfo'],
-  created() {
-    console.log(this.orderInfo);
-    console.log(this.orderInfo.totalPrice);
-  },
 };
 </script>

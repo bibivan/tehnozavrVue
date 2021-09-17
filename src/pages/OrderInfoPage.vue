@@ -20,64 +20,16 @@
       </ul>
 
       <h1 class="content__title">
-        Заказ оформлен <span>№ 23621</span>
+        Заказ оформлен <span>№ {{ orderInfo.id }}</span>
       </h1>
     </div>
 
     <section class="cart">
-      <form class="cart__form form" action="#" method="POST" @submit.prevent="showData">
-        <div class="cart__field">
-          <p class="cart__message">
-            Благодарим за выбор нашего магазина. На Вашу почту придет письмо с деталями
-            заказа.
-            Наши менеджеры свяжутся с Вами в течение часа для уточнения деталей доставки.
-          </p>
+      <form class="cart__form form" action="#" method="POST">
 
-          <ul class="dictionary">
-            <li class="dictionary__item">
-              <span class="dictionary__key">
-                Получатель
-              </span>
-              <span class="dictionary__value">
-                Иванова Василиса Алексеевна
-              </span>
-            </li>
-            <li class="dictionary__item">
-              <span class="dictionary__key">
-                Адрес доставки
-              </span>
-              <span class="dictionary__value">
-                Москва, ул. Ленина, 21, кв. 33
-              </span>
-            </li>
-            <li class="dictionary__item">
-              <span class="dictionary__key">
-                Телефон
-              </span>
-              <span class="dictionary__value">
-                8 800 989 74 84
-              </span>
-            </li>
-            <li class="dictionary__item">
-              <span class="dictionary__key">
-                Email
-              </span>
-              <span class="dictionary__value">
-                lalala@mail.ru
-              </span>
-            </li>
-            <li class="dictionary__item">
-              <span class="dictionary__key">
-                Способ оплаты
-              </span>
-              <span class="dictionary__value">
-                картой при получении
-              </span>
-            </li>
-          </ul>
-        </div>
+        <ClientInfo :orderInfo="orderInfo"/>
 
-        <OrderedProductsInfo :orderInfo="orderDetailProducts"/>
+        <OrderedProductsInfo :orderInfo="orderInfo"/>
       </form>
     </section>
   </main>
@@ -86,12 +38,15 @@
 <script>
 import { mapGetters } from 'vuex';
 import OrderedProductsInfo from '@/components/OrderedProductsInfo.vue';
+import ClientInfo from '@/components/ClientInfo.vue';
 
 export default {
   name: 'OrderInfoPage',
-  components: { OrderedProductsInfo },
+  components: { OrderedProductsInfo, ClientInfo },
   computed: {
-    ...mapGetters(['orderDetailProducts']),
+    ...mapGetters({
+      orderInfo: 'orderDetailProducts',
+    }),
   },
   created() {
     if (this.$store.state.orderInfo && this.$store.state.orderInfo.id === +this.$route.params.id) {
