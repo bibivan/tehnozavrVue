@@ -3,7 +3,9 @@
     <svg width="30" height="21" fill="currentColor">
       <use xlink:href="#icon-cart"></use>
     </svg>
-    <span class="spinner" aria-label="Количество товаров"
+    <span class="preloader__spinner"
+          :style="styles"
+          aria-label="Количество товаров"
           v-if="countLoading">
     </span>
     <span class="header__count" aria-label="Количество товаров"
@@ -25,6 +27,14 @@ export default {
   data() {
     return {
       countLoading: false,
+      styles: {
+        top: '-20%',
+        right: '-10%',
+        border: '2px solid #9eff00',
+        borderLeftColor: 'transparent',
+        width: '14px',
+        height: '14px',
+      },
     };
   },
   methods: {
@@ -41,3 +51,9 @@ export default {
   },
 };
 </script>
+
+<style>
+.preloader__spinner {
+
+}
+</style>

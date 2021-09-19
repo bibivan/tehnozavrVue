@@ -109,8 +109,7 @@
           </div>
         </div>
 
-        <OrderingProductsInfo :dataSending="formDataSending"
-                              :sendingFailed="formDataSendingFailed"/>
+        <OrderingProductsInfo/>
 
         <div class="cart__error form__error-block" v-if="formErrorMessage">
           <h4>Заявка не отправлена!</h4>
@@ -142,15 +141,12 @@ export default {
       formData: {},
       formError: {},
       formErrorMessage: '',
-      formDataSending: false,
-      formDataSendingFailed: false,
     };
   },
   methods: {
     order() {
       this.formError = {};
       this.formErrorMessage = '';
-      this.formDataSending = true;
 
       return axios.post(`${API_BASE_URL}/api/orders`, {
         ...this.formData,
@@ -159,12 +155,10 @@ export default {
           userAccessKey: this.$store.state.userAccessKey,
         },
       }).then((response) => {
-        this.formDataSending = false;
         this.$store.commit('resetCart');
         this.$store.commit('updateOrderInfo', response.data);
         this.$router.push({ name: 'orderInfo', params: { id: response.data.id } });
       }).catch((error) => {
-        this.formDataSending = false;
         this.formError = error.response.data.error.request || {};
         this.formErrorMessage = error.response.data.error.message;
       });

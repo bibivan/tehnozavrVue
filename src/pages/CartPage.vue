@@ -30,7 +30,11 @@
     </div>
 
     <section class="cart">
-      <div v-if="productsLoading"> Загрузка товаров</div>
+      <div v-if="productsLoading">
+        <div class="preloader">
+          <div class="preloader__spinner"></div>
+        </div>
+      </div>
       <div v-else-if="$store.state.cartLoadingFailed"> Произошла ошибка</div>
       <div v-else-if="products.length === 0 && $store.state.cartLoadingFailed === false">
         Корзина пуста
@@ -50,9 +54,10 @@
             Итого: <span>{{ totalPrice | numberFormat }} ₽</span>
           </p>
 
-          <router-link tag="button" :to="{ name: 'order'}"
-                       class="cart__button button button--primery" type="submit">
-            Оформить заказ
+          <router-link :to="{ name: 'order'}">
+            <button class="cart__button button button--primery" type="submit">
+              Оформить заказ
+            </button>
           </router-link>
         </div>
       </form>

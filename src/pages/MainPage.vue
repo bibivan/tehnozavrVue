@@ -5,7 +5,7 @@
         Каталог
       </h1>
       <span class="content__info">
-        152 товара
+        {{ products.length }} товара
       </span>
     </div>
 
@@ -18,11 +18,18 @@
         :current-color-id.sync="filterColorId"
       />
 
-      <section class="catalog">
-        <div v-if="productsLoading">Загрузка товаров...</div>
-        <div v-if="productsLoadingFailed">Произошла ошибка при загрузке товаров...
-          <button @click.prevent="loadProducts">Попробовать еще раз</button>
+      <section v-if="productsLoading">
+        <div class="preloader">
+          <div class="preloader__spinner"></div>
         </div>
+      </section>
+      <section class="loading-failed" v-if="productsLoadingFailed">
+        <p>Произошла ошибка при загрузке товаров...</p>
+        <BaseButton class="button--failed" title="Попробовать еще раз"
+                    @click.prevent="loadProducts"></BaseButton>
+      </section>
+
+      <section class="catalog" v-else>
         <ProductList :productItems="products"/>
         <BasePagination v-model="page" :count="countProducts" :per-page="productsPerPage"/>
       </section>
@@ -36,6 +43,7 @@ import axios from 'axios';
 import ProductList from '@/components/ProductList.vue';
 import BasePagination from '@/components/BasePagination.vue';
 import ProductFilter from '@/components/ProductFilter.vue';
+import BaseButton from '../components/BaseButton.vue';
 import API_BASE_URL from '@/config';
 
 export default {
@@ -43,6 +51,7 @@ export default {
     ProductList,
     BasePagination,
     ProductFilter,
+    BaseButton,
   },
   data() {
     return {

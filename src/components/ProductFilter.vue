@@ -155,7 +155,16 @@ export default {
       return this.categoriesData ? this.categoriesData.items : [];
     },
     colors() {
-      return this.colorsData ? this.colorsData.items : [];
+      const colors = [];
+      if (this.colorsData) {
+        this.colorsData.items.forEach((item) => {
+          if (!colors.some((color) => color.code === item.code)) {
+            colors.push(item);
+          }
+        });
+      }
+      console.log(colors);
+      return colors;
     },
   },
   watch: {
@@ -180,7 +189,6 @@ export default {
       this.$emit('update:priceFrom', this.currentPriceFrom);
       this.$emit('update:priceTo', this.currentPriceTo);
       this.$emit('update:categoryId', this.currentCategoryId);
-      this.$emit('update:availableColors', this.currentColor);
       this.$emit('update:availableColors', this.currentColor);
       this.$emit('update:currentColorId', this.currentColorId);
     },

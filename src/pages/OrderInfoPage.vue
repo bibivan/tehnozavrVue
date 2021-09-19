@@ -1,5 +1,13 @@
 <template>
-  <main class="content container">
+  <main class="content container" v-if="loading">
+    <div class="preloader">
+      <div class="preloader__spinner"></div>
+    </div>
+  </main>
+  <main class="content container" v-else-if="loadingFailed">
+    <p>Произошла ошибка при загрузке</p>
+  </main>
+  <main class="content container" v-else>
     <div class="content__top">
       <ul class="breadcrumbs">
         <li class="breadcrumbs__item">
@@ -43,17 +51,29 @@ import ClientInfo from '@/components/ClientInfo.vue';
 export default {
   name: 'OrderInfoPage',
   components: { OrderedProductsInfo, ClientInfo },
+  data() {
+    return {
+      loading: false,
+      loadingFailed: false,
+    };
+  },
   computed: {
     ...mapGetters({
       orderInfo: 'orderDetailProducts',
     }),
   },
   created() {
+    this.loading = true;
+    this.loadingFailed = false;
     if (this.$store.state.orderInfo && this.$store.state.orderInfo.id === +this.$route.params.id) {
-      console.log('work');
+      this.loading = false;
       return;
     }
-    this.$store.dispatch('loadOrderInfo', this.$route.params.id);
+    this.$store.dispatch('loadOrderInfo', this.$route.params.id).catch(() => {
+      this.loadingFailed = true;
+    }).then(() => {
+      this.loading = false;
+    });
   },
 };
 </script>

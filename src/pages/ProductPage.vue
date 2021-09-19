@@ -1,5 +1,9 @@
 <template>
-  <main class="content container" v-if="productLoading">Загрузка товара...</main>
+  <main class="content container" v-if="productLoading">
+    <div class="preloader">
+      <div class="preloader__spinner"></div>
+    </div>
+  </main>
   <main class="content container" v-else-if="!productData || productLoadingFailed">
     Не удалось загрузить товар
   </main>
