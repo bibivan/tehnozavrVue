@@ -16,6 +16,7 @@
         :category-id.sync="filterCategoryId"
         :available-colors.sync="filterColorCode"
         :current-color-id.sync="filterColorId"
+        :current-per-page.sync="productsPerPage"
       />
 
       <section v-if="productsLoading">
@@ -63,7 +64,7 @@ export default {
       productsLoading: true,
       productsLoadingFailed: false,
       page: 1,
-      productsPerPage: 3,
+      productsPerPage: 12,
       productsData: null,
     };
   },
@@ -110,6 +111,9 @@ export default {
   },
   watch: {
     page() {
+      this.loadProducts();
+    },
+    productsPerPage() {
       this.loadProducts();
     },
     filterPriceFrom() {

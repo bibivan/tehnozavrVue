@@ -51,9 +51,3 @@ export default {
   },
 };
 </script>
-
-<style>
-.preloader__spinner {
-
-}
-</style>
